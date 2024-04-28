@@ -12,84 +12,84 @@ typedef struct Node {
 typedef struct Graph {
     int vertices;
     int *visited;
-    Node **adjacencyList;
+    Node **adjacency_list;
 } Graph;
 
-Node *createNode(int vertex) {
-    Node *newNode = static_cast<Node *>(malloc(sizeof(Node)));
-    newNode->vertex = vertex;
-    newNode->next = NULL;
+Node *create_node(int vertex) {
+    Node *new_node = static_cast<Node *>(malloc(sizeof(Node)));
+    new_node->vertex = vertex;
+    new_node->next = NULL;
 
-    return newNode;
+    return new_node;
 }
 
-void addEdge(Graph *graph, int source, int destination) {
-    Node *newNode = createNode(destination);
-    newNode->next = graph->adjacencyList[source];
-    graph->adjacencyList[source] = newNode;
+void add_edge(Graph *graph, int source, int destination) {
+    Node *new_node = create_node(destination);
+    new_node->next = graph->adjacency_list[source];
+    graph->adjacency_list[source] = new_node;
 }
 
-Graph *createGraph(int vertices) {
+Graph *create_graph(int vertices) {
     Graph *graph = static_cast <Graph*> (malloc(sizeof(Graph)));
 
     graph->vertices = vertices;
-    graph->adjacencyList = static_cast<Node **>(malloc(sizeof(Node *) * vertices));
+    graph->adjacency_list = static_cast<Node **>(malloc(sizeof(Node *) * vertices));
     graph->visited = static_cast<int *>(malloc(sizeof(int) * vertices));
 
     for (int i = 0; i < vertices; i++) {
-        graph->adjacencyList[i] = NULL;
+        graph->adjacency_list[i] = NULL;
         graph->visited[i] = 0;
     }
 
     return graph;
 }
 
-void depthFirstSearch(Graph *graph, int vertexNumber, int destination, int *pathExists) {
-    Node *adjList = graph->adjacencyList[vertexNumber];
-    Node *aux = adjList;
-    graph->visited[vertexNumber] = 1;
+void depth_first_search(Graph *graph, int vertex_number, int destination, int *path_exists) {
+    Node *adj_list = graph->adjacency_list[vertex_number];
+    Node *aux = adj_list;
+    graph->visited[vertex_number] = 1;
 
-    if (vertexNumber == destination) {
-        *pathExists = 1;
+    if (vertex_number == destination) {
+        *path_exists = 1;
         return;
     }
 
     while (aux != NULL) {
-        int connectedVertex = aux->vertex;
-        if (graph->visited[connectedVertex] == 0) {
-            depthFirstSearch(graph, connectedVertex, destination, pathExists);
+        int connected_vertex = aux->vertex;
+        if (graph->visited[connected_vertex] == 0) {
+            depth_first_search(graph, connected_vertex, destination, path_exists);
         }
         aux = aux->next;
     }
 }
 
 int main() {
-    int numVertices, numEdges, source, destination;
+    int num_vertices, num_edges, source, destination;
 
     printf("Cate noduri are reteaua?\n");
-    scanf("%d", &numVertices);
+    scanf("%d", &num_vertices);
 
     printf("Cate muchii are reteaua?\n");
-    scanf("%d", &numEdges);
+    scanf("%d", &num_edges);
 
-    Graph *graph = createGraph(numVertices);
+    Graph *graph = create_graph(num_vertices);
 
-    printf("Adauga %d muchii (de la 1 la %d) (exemplu: \"%d 1\"):\n", numEdges, numVertices, numVertices);
+    printf("Adauga %d muchii (de la 1 la %d) (exemplu: \"%d 1\"):\n", num_edges, num_vertices, num_vertices);
 
-    for (int i = 0; i < numEdges; i++) {
+    for (int i = 0; i < num_edges; i++) {
         int source, destination;
         scanf("%d %d", &source, &destination);
-        addEdge(graph, source - 1, destination - 1); // decrementăm pentru a indexa de la 0
+        add_edge(graph, source - 1, destination - 1); // decrementăm pentru a indexa de la 0
     }
 
     printf("Introduceti sursa si destinatia pentru a verifica existenta unui drum direct:\n");
     scanf("%d %d", &source, &destination);
 
-    int pathExists = 0;
+    int path_exists = 0;
 
-    depthFirstSearch(graph, source - 1, destination - 1, &pathExists); // decrementăm pentru a indexa de la 0
+    depth_first_search(graph, source - 1, destination - 1, &path_exists); // decrementăm pentru a indexa de la 0
 
-    if (pathExists) {
+    if (path_exists) {
         printf("Exista un drum direct intre nodurile %d si %d.\n", source, destination);
     } else {
         printf("Nu exista un drum direct intre nodurile %d si %d.\n", source, destination);
